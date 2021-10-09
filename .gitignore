@@ -3,3 +3,4 @@ __pycache__/
 venv/
 .idea
 credentials.json
+token_slides_v1.pickle
