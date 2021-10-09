@@ -1,0 +1,62 @@
+Var,Value
+ACCOUNT,Airbnb
+LOB,
+Region,BG
+DataVlan_Location,BG-Sofia-D1
+IPHelper,ssofabgc1fox01.ti.ads
+SiteName,Telus` Tower
+Template,MOP_Template_NewSite_AD_Data_Voice
+WFH,FALSE
+# Main Data/Voice Vlan,
+Site Data Octet,19
+Site Voice Octet,119
+Account Octet (Start),60
+Account Octet (End),63
+,
+DataVlan_Num,160
+DataNetwork,10.19.60.0
+DataVlan_Range,/22
+DataVlan_Start,10.19.60.10
+DataVlan_End,10.19.63.250
+Data_GW,10.19.60.1
+SubnetMask_Data,255.255.252.0
+,
+VoiceVlan_Num,1160
+VoiceNetwork,10.119.60.0
+VoiceVlan_Range,/22
+VoiceVlan_Start,10.119.60.10
+VoiceVlan_End,10.119.63.250
+Voice_GW,10.119.60.1
+SubnetMask_Voice,255.255.252.0
+,
+# LA VDI,
+DataVlanLA_Num,160
+DataLANetwork,10.9.60.0
+DataVlanLA_Range,/24
+DataVlanLA_Start,10.9.60.10
+DataVlanLA_End,10.9.63.250
+DataLA_GW,10.9.63.1
+SubnetMaskLA_Data,255.255.255.0
+,
+# MI VDI,
+DataVlanMIA_Num,160
+DataMIANetwork,10.32.60.0
+DataVlanMIA_Range,/24
+DataVlanMIA_Start,10.32.60.10
+DataVlanMIA_End,10.32.63.250
+DataMIA_GW,10.32.60.1
+SubnetMaskMIA_Data,255.255.255.0
+,
+# EU VDI,
+DataVlanEU_Num,160
+DataEUNetwork,10.54.60.0
+DataVlanEU_Range,/24
+DataVlanEU_Start,10.54.60.10
+DataVlanEU_End,10.54.63.250
+DataEU_GW,10.54.60.1
+SubnetMaskEU_Data,255.255.255.0
+,
+# WFH Data,
+WFHNetwork,10.20.60.0
+WFHVlan_Range,/24
+WFH_Site,BG-Sofia-D1
