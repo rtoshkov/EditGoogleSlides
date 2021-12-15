@@ -39,9 +39,9 @@ print(f'ID-то на презентацията - {pres_id}')
 CLIENT_SECRET_FILE = CREDENTIALS
 API_NAME = 'slides'
 API_VERSION = 'v1'
-SCOPES = ['https://www.googleapis.com/auth/presentations']
+SLIDES_SCOPES = ['https://www.googleapis.com/auth/presentations']
 
-slides_api = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+slides_api = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SLIDES_SCOPES)
 
 # Правим заявка (req) която създаваме от 'container'.
 # Общо взето ако има {{колона_едно}} с какво да бъде заменено - колона_две
