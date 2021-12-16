@@ -46,13 +46,13 @@ url = text_file.readline().strip()
 regex = '\/presentation\/d\/([a-zA-Z0-9-_]+)'
 pres_id = re.search(regex, url).group(1)
 
-# Gets the name of the presentation via Drive API
+# Gets the name of the presentation | Drive API
 
 drive_api = Create_Service(CLIENT_SECRET_FILE, DRIVE_API_NAME, DRIVE_API_VERSION, DRIVE_SCOPES)
 file_data = drive_api.files().get(fileId=pres_id, fields='name').execute()
 presentation_name = file_data['name']
 
-# Creates a copy in DESTINATION_FOLDER
+# Creates a copy in DESTINATION_FOLDER | Drive API
 
 new_file = drive_api.files().copy(fileId=pres_id,
                                   body={'name': f'Copy of {presentation_name}', 'parents': [DESTINATION_FOLDER]},
@@ -60,7 +60,7 @@ new_file = drive_api.files().copy(fileId=pres_id,
                                   ).execute()
 new_file_id = new_file.get('id')
 
-# Sends request via Slides API to change the copied file
+# Sends request to change the copied file | Slides API
 # --- All placeholders in the files should be {{variable}}, where variable = The first column of CSV_LOCATION file
 # --- Example: {{ACCOUNT}} !!! NOT {{ ACCOUNT }}
 
