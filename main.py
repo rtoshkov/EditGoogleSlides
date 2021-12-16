@@ -61,7 +61,7 @@ new_file = drive_api.files().copy(fileId=pres_id,
                                   ).execute()
 new_file_id = new_file.get('id')
 
-# Sends request to Slides API to change the copied file
+# Sends request via Slides API to change the copied file
 # --- All placeholders in the files should be {{variable}}, where variable = The first column of CSV_LOCATION file
 # --- Example: {{ACCOUNT}}
 
