@@ -20,7 +20,7 @@ DataVlan_Start,10.19.60.10
 DataVlan_End,10.19.63.250
 Data_GW,10.19.60.1
 SubnetMask_Data,255.255.252.0
-,
+,ø
 VoiceVlan_Num,1160
 VoiceNetwork,10.119.60.0
 VoiceVlan_Range,/22

@@ -2,54 +2,73 @@ import csv
 import re
 
 from google_api_call import Create_Service
-from settings import CSV_LOCATION, PRESENTATION_URL, CREDENTIALS
-
-# Четене на CSV файла - настройка за пътя и името в settings.py
-
-with open(CSV_LOCATION) as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    line_count = 0
-    NOT_DATA = ['', None]
-    column_one = []
-    column_two = []
-    for row in csv_reader:
-        if line_count == 0 or row[0] in NOT_DATA or row[1] in NOT_DATA:
-            line_count += 1
-            continue
-        else:
-            column_one.append(row[0])
-            column_two.append(row[1])
-
-    container = dict(zip(column_one, column_two))
-
-# След прочитането на файла се създава речник 'container' който като извикаш в него стойност от колона едно
-# ти връща колона 2. Пример container['ACCOUNT'] ще ти даде името на акаунта - например Airbnb.
+from settings import CSV_LOCATION, PRESENTATION_URL, CLIENT_SECRET_FILE, DRIVE_API_NAME, DRIVE_API_VERSION, \
+    DRIVE_SCOPES, SLIDES_API_NAME, SLIDES_API_VERSION, SLIDES_SCOPES, DESTINATION_FOLDER, CHANGES
 
 
-# Прочитаме подаденият адрес на презентацията в текстовия файл и взимаме ID-то от него
+def read_file(file_name, number_of_columns=2):
+    with open(file_name) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        not_data = ['', None]
+        column_one = []
+        column_two = []
+        for row in csv_reader:
+            if line_count == 0 or row[0] in not_data:
+                line_count += 1
+                continue
+            elif number_of_columns == 2 and row[1] in not_data:
+                line_count += 1
+                continue
+            elif number_of_columns == 2:
+                column_one.append(row[0].strip().lower())
+                column_two.append(row[1])
+            else:
+                column_one.append(row[0].strip().lower())
+
+        result = dict(zip(column_one, column_two))
+
+    if number_of_columns == 1:
+        return column_one
+    return result
+
+
+# Reads CSV_LOCATION and CHANGES then creates variables
+#  ---  Example:  SiteName,Telus` Tower  => container['sitename'] = 'Telus` Tower'
+
+container = read_file(CSV_LOCATION)
+changes_list = read_file(CHANGES, 1)
+
+print(changes_list)
+# Gets the presentation link from PRESENTATION_URL
 
 text_file = open(PRESENTATION_URL, 'r')
 url = text_file.readline().strip()
 regex = '\/presentation\/d\/([a-zA-Z0-9-_]+)'
 pres_id = re.search(regex, url).group(1)
-print(f'ID-то на презентацията - {pres_id}')
 
-# Извикване API-то на Google Slide.
+# Gets the name of the presentation via Drive API
 
-CLIENT_SECRET_FILE = CREDENTIALS
-API_NAME = 'slides'
-API_VERSION = 'v1'
-SLIDES_SCOPES = ['https://www.googleapis.com/auth/presentations']
+drive_api = Create_Service(CLIENT_SECRET_FILE, DRIVE_API_NAME, DRIVE_API_VERSION, DRIVE_SCOPES)
+file_data = drive_api.files().get(fileId=pres_id, fields='name').execute()
+presentation_name = file_data['name']
 
-slides_api = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SLIDES_SCOPES)
+# Creates a copy in DESTINATION_FOLDER
 
-# Правим заявка (req) която създаваме от 'container'.
-# Общо взето ако има {{колона_едно}} с какво да бъде заменено - колона_две
-# ПРОМЕНЛИВИТЕ В ПРЕСЕНТАЦИЯТА ТРЯБВА ДА СА {{колона_едно}} - не е case sensitive.
-# Пример {{account}} ще бъде заменено с Airbnb
+new_file = drive_api.files().copy(fileId=pres_id,
+                                  body={'name': f'Copy of {presentation_name}', 'parents': [DESTINATION_FOLDER]},
+                                  supportsTeamDrives=True,
+                                  ).execute()
+new_file_id = new_file.get('id')
+
+# Sends request to Slides API to change the copied file
+# --- All placeholders in the files should be {{variable}}, where variable = The first column of CSV_LOCATION file
+# --- Example: {{ACCOUNT}}
+
+slides_api = Create_Service(CLIENT_SECRET_FILE, SLIDES_API_NAME, SLIDES_API_VERSION, SLIDES_SCOPES)
 
 reqs = []
-for word, value in container.items():
+for word in changes_list:
     reqs.append(
         {
             "replaceAllText": {
@@ -57,10 +76,10 @@ for word, value in container.items():
                     "text": '{{' + word + '}}',
                     "matchCase": False
                 },
-                "replaceText": value,
+                "replaceText": container[word],
             },
 
         },
     )
 
-slides_api.presentations().batchUpdate(body={'requests': reqs}, presentationId=pres_id, fields='').execute()
+slides_api.presentations().batchUpdate(body={'requests': reqs}, presentationId=new_file_id, fields='').execute()
