@@ -33,13 +33,12 @@ def read_file(file_name, number_of_columns=2):
     return result
 
 
-# Reads CSV_LOCATION and CHANGES then creates variables
+# Reads 'CSV_LOCATION' file and 'CHANGES' file then creates variables
 #  ---  Example:  SiteName,Telus` Tower  => container['sitename'] = 'Telus` Tower'
 
 container = read_file(CSV_LOCATION)
 changes_list = read_file(CHANGES, 1)
 
-print(changes_list)
 # Gets the presentation link from PRESENTATION_URL
 
 text_file = open(PRESENTATION_URL, 'r')
@@ -63,7 +62,7 @@ new_file_id = new_file.get('id')
 
 # Sends request via Slides API to change the copied file
 # --- All placeholders in the files should be {{variable}}, where variable = The first column of CSV_LOCATION file
-# --- Example: {{ACCOUNT}}
+# --- Example: {{ACCOUNT}} !!! NOT {{ ACCOUNT }}
 
 slides_api = Create_Service(CLIENT_SECRET_FILE, SLIDES_API_NAME, SLIDES_API_VERSION, SLIDES_SCOPES)
 
