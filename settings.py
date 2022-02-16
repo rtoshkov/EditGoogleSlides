@@ -1,8 +1,8 @@
 # FILE LOCATION
-CSV_LOCATION = rf'C:\Users\rosen.toshkov\Documents\EditGoogleSlides\NCL_Data.csv'
-PRESENTATION_URL = rf'C:\Users\rosen.toshkov\Documents\EditGoogleSlides\presentation.txt'
+CSV_LOCATION = rf'./NCL_Data.csv'
+PRESENTATION_URL = rf'./presentation.txt'
 DESTINATION_FOLDER = '1gywvccO1QCx2jA2YkXx0w-YcJ0yptZxw'
-CHANGES = rf'C:\Users\rosen.toshkov\Documents\EditGoogleSlides\changes.csv'
+CHANGES = rf'./changes.csv'
 
 # GOOGLE API
 
