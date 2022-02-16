@@ -53,9 +53,8 @@ file_data = drive_api.files().get(fileId=pres_id, fields='name').execute()
 presentation_name = file_data['name']
 
 # Creates a copy in DESTINATION_FOLDER | Drive API
-
 new_file = drive_api.files().copy(fileId=pres_id,
-                                  body={'name': f'Copy of {presentation_name}', 'parents': [DESTINATION_FOLDER]},
+                                  body={'name': f'{container["account"]} PL153', 'parents': [DESTINATION_FOLDER]},
                                   supportsTeamDrives=True,
                                   ).execute()
 new_file_id = new_file.get('id')
